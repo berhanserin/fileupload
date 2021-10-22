@@ -12,24 +12,21 @@ export default class App extends Component {
   }
   uploadPhoto = async response => {
     const data = new FormData();
-    console.log(response.assets);
-    data.append('photos', {
-      uri: response.assets.uri,
-      type: response.assets.type,
-      name: response.assets.fileName,
+    response.assets.forEach(filed => {
+      data.append('photos', {
+        uri: filed.uri,
+        name: filed.fileName,
+        type: filed.type,
+      });
     });
-    // axios.get('http://192.168.1.40:5000/upload').then(data => {
-    //   console.log(data);
-    // });
 
-    axios({
+    await axios({
       method: 'post',
       url: 'http://192.168.1.40:5000/upload',
-      data: data,
       headers: {
-        Accept: 'application/json',
         'Content-Type': 'multipart/form-data',
       },
+      data: data,
     })
       .then(response => {
         console.log(response);
